@@ -1,0 +1,24 @@
+name: Build El Krazie Key & Tempo Finder
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Configure CMake
+        run: cmake -B build -S . -A x64
+      - name: Build VST3 and Standalone
+        run: cmake --build build --config Release --parallel 2
+      - name: Upload compiled plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: El-Krazie-Key-Tempo-Finder-Windows
+          path: |
+            build/ElKrazieKeyTempoFinder_artefacts/Release/VST3/**
+            build/ElKrazieKeyTempoFinder_artefacts/Release/Standalone/**
+          if-no-files-found: error
