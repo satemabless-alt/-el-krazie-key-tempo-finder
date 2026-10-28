@@ -1,0 +1,23 @@
+
+name: Build El Krazie Key and Tempo Finder
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -S . -A x64
+      - name: Compile
+        run: cmake --build build --config Release --parallel 2
+      - name: Save plugin files
+        uses: actions/upload-artifact@v4
+        with:
+          name: El-Krazie-Key-Tempo-Finder-Windows
+          path: build/ElKrazieKeyTempoFinder_artefacts/Release/
+          if-no-files-found: error
